@@ -51,23 +51,23 @@ Optionally you can pass this module a set of configs:
 
   - Default:
 
-    ```javascript
+    ```json
     {
-      extends: ['html-validate:recommended'], // use the project's recommended rules, except...
-      rules: { // the defaults have some problems, so we're changing them
-        'attr-case': [ // has to do with permitted case (uppercase or lowercase) for attributes
-          'error',
+      "extends": ["html-validate:recommended"],
+      "rules": {
+        "attr-case": [
+          "error",
           {
-            rules: {
-              style: 'lowercase', // forces lowercase attributes
-              ignoreForeign: true // except in cases of non-HTML elements, e.g. <svg viewBox="0 0 100 100">
+            "rules": {
+              "style": "lowercase",
+              "ignoreForeign": true
             }
           }
         ],
-        'attr-quotes': 'off', // allows single or double quotes
-        'no-conditional-comment': 'off', // conditional comments are still useful sometimes and they're technically valid HTML, so there's no reason to have this rule
-        'no-trailing-whitespace': 'off', // linters should enforce this, not validators
-        'prefer-button': 'off' // this rule incorrectly disallows <input type="submit"> https://gitlab.com/html-validate/html-validate/-/issues/90
+        "attr-quotes": "off",
+        "no-conditional-comment": "off",
+        "no-trailing-whitespace": "off",
+        "prefer-button": "off"
       }
     }
     ```
