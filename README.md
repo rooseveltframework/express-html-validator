@@ -55,8 +55,19 @@ Optionally you can pass this module a set of configs:
     {
       "extends": ["html-validate:recommended"],
       "rules": {
-        "attr-case": "off",
-        "attr-quotes": "off"
+        "attr-case": [
+          "error",
+          {
+            "rules": {
+              "style": "lowercase",
+              "ignoreForeign": true
+            }
+          }
+        ],
+        "attr-quotes": "off",
+        "no-conditional-comment": "off",
+        "no-trailing-whitespace": "off",
+        "prefer-button": "off"
       }
     }
     ```
