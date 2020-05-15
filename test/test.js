@@ -193,10 +193,21 @@ test('use defaults when validatorConfig is an empty object and no config file ex
   expressValidator(t.context.app, { rules: {} })
 
   t.deepEqual(config, {
-    extends: ['html-validate:recommended'],
-    rules: {
-      'attr-case': 'off',
-      'attr-quotes': 'off'
+    extends: ['html-validate:recommended'], // use the project's recommended rules, except...
+    rules: { // the defaults have some problems, so we're changing them
+      'attr-case': [ // has to do with permitted case (uppercase or lowercase) for attributes
+        'error',
+        {
+          rules: {
+            style: 'lowercase', // forces lowercase attributes
+            ignoreForeign: true // except in cases of non-HTML elements, e.g. <svg viewBox="0 0 100 100">
+          }
+        }
+      ],
+      'attr-quotes': 'off', // allows single or double quotes
+      'no-conditional-comment': 'off', // conditional comments are still useful sometimes and they're technically valid HTML, so there's no reason to have this rule
+      'no-trailing-whitespace': 'off', // linters should enforce this, not validators
+      'prefer-button': 'off' // this rule incorrectly disallows <input type="submit"> https://gitlab.com/html-validate/html-validate/-/issues/90
     }
   })
 })
