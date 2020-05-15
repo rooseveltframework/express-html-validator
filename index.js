@@ -29,15 +29,6 @@ module.exports = (app, params) => {
         ignoreForeign: true // except in cases of non-HTML elements, e.g. <svg viewBox="0 0 100 100">
       },
       'attr-quotes': 'off', // allows single or double quotes
-      /*
-      TODO: find a way to *actually* do this... it doesn't work because it overrides the rule that prevents bullshit tags like <blah> for some reason
-      'element-name': { // default config doesn't some valid html elements, so we're adding them
-        whitelist: [
-          'details', // https://gitlab.com/html-validate/html-validate/-/issues/89
-          'summary' // https://gitlab.com/html-validate/html-validate/-/issues/89
-        ]
-      },
-      */
       'no-conditional-comment': 'off', // conditional comments are still useful sometimes and they're technically valid html, so there's no reason to have this rule
       'no-trailing-whitespace': 'off', // linters should enforce this, not validators
       'prefer-button': 'off' // this rule incorrectly disallows <input type="submit"> https://gitlab.com/html-validate/html-validate/-/issues/90
