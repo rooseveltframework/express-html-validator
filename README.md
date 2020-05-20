@@ -53,21 +53,6 @@ Optionally you can pass this module a set of configs:
 
     ```json
     {
-      "extends": ["html-validate:recommended"],
-      "rules": {
-        "attr-case": [
-          "error",
-          {
-            "rules": {
-              "style": "lowercase",
-              "ignoreForeign": true
-            }
-          }
-        ],
-        "attr-quotes": "off",
-        "no-conditional-comment": "off",
-        "no-trailing-whitespace": "off",
-        "prefer-button": "off"
-      }
+      "extends": ["html-validate:standard"]
     }
     ```
