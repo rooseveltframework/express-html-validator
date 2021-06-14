@@ -2,7 +2,7 @@
 
 ## Next version
 
-- Put your changes here...
+- Dropped support for Node 12. Added support for Node 16.
 
 ## 0.1.2
 
