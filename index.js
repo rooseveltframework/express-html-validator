@@ -59,7 +59,7 @@ module.exports = (app, params) => {
   // source validatorConfig
   if (Object.keys(rules).length === 0) {
     // when no config is passed check for a config file
-    const ruleFile = path.join(appDir, '.htmlvalidator.json')
+    const ruleFile = path.join(appDir, '.htmlValidate.json')
 
     if (fileExists(ruleFile)) {
       rules = require(ruleFile)
