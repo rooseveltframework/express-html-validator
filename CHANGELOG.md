@@ -4,6 +4,10 @@
 
 - Put your changes here...
 
+## 0.2.0
+
+- Various dependencies bumped.
+
 ## 0.1.3
 
 - Dropped support for Node 12. Added support for Node 16.
