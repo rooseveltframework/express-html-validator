@@ -29,6 +29,30 @@ app.get('/', (req, res) => {
 })
 ```
 
+You can also run the validator on arbitrary strings outide of the Express context:
+
+```js
+const config = {}
+const expressValidator = require('express-html-validator')(config)
+
+const someHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Some HTML that will not validate</title>
+</head>
+<body>
+  <p>hello world</p></p>
+</body>
+</html>`
+
+const validationResult = expressValidator(someHtml)
+```
+
+Since the example HTML is not valid, if you display the contents of `validationResult` in a browser, you will see validation errors.
+
 ## Configuration
 
 Optionally you can pass this module a set of configs:
