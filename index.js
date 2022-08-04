@@ -10,7 +10,7 @@ const { HtmlValidate } = require('html-validate')
 const validatorErrorPage = fs.readFileSync(path.join(__dirname, 'templates/errorPage.html'))
 
 module.exports = (app, params) => {
-  if (app.hasOwnProperty('listen') || typeof app.listen === 'function') {
+  if (Object.prototype.hasOwnProperty.call(app, 'listen') || typeof app.listen === 'function') {
     params = params || {} // two arguments
   } else {
     params = app // one argument
