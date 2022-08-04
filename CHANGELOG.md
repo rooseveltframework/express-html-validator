@@ -4,6 +4,12 @@
 
 - Put your changes here...
 
+## 0.2.1
+
+- Added feature to run the validator on arbitrary strings in addition to the direct Express render integration.
+- Bumped Node support matrix to 16 and 18.
+- Various dependencies bumped.
+
 ## 0.2.0
 
 - Various dependencies bumped.

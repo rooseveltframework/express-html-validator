@@ -10,8 +10,17 @@ const { HtmlValidate } = require('html-validate')
 const validatorErrorPage = fs.readFileSync(path.join(__dirname, 'templates/errorPage.html'))
 
 module.exports = (app, params) => {
-  params = params || {}
-  const render = app.response.render
+  if (app.hasOwnProperty('listen') || typeof app.listen === 'function') {
+    params = params || {} // two arguments
+  } else {
+    params = app // one argument
+    app = null
+  }
+
+  let render
+  if (app) {
+    render = app.response.render
+  }
   let resModel
 
   // sanitize config
@@ -71,91 +80,100 @@ module.exports = (app, params) => {
   // instantiate the validator module
   const htmlValidate = new HtmlValidate(rules)
 
-  // use some method overload trickery to store a usable model reference
-  app.response.render = function (view, model, callback) {
-    // store a reference to the model if exceptions are being used and a model was set
-    if (model && typeof model === 'object') {
-      resModel = model
+  function validate (body, res) {
+    // run the validator against the response body
+    const report = htmlValidate.validateString(body)
+
+    if (!report.valid) {
+      const errorMap = new Map()
+      let parsedErrors = ''
+
+      for (const error of report.results[0].messages) {
+        const message = escapeHtmlEntities(error.message)
+
+        // first line is error message
+        parsedErrors += `${message}\n`
+
+        // next line is line and column numbers
+        parsedErrors += `At line ${error.line}, column ${error.column}\n\n`
+
+        // add error message and line number to map
+        errorMap.set(error.line, error.message)
+      }
+
+      const errorList = `<h2>Errors:</h2>\n<code class="validatorErrors">${parsedErrors}</code>`
+
+      // start building out stylized markup block
+      let formattedHTML = '<pre class=\'markup\'>\n<code class="language-html">\n'
+      const markupArray = body.split('\n')
+
+      // add line number highlighting for detected errors
+      for (let i = 0; i < markupArray.length; i++) {
+        const markupLine = markupArray[i]
+        if (errorMap.has(i + 1)) {
+          formattedHTML += `<span title='${errorMap.get(i + 1)}' class='line-numbers error'>`
+          formattedHTML += Prism.highlight(`${markupLine}`, Prism.languages.markup)
+          formattedHTML += '</span>'
+        } else {
+          formattedHTML += '<span class=\'line-numbers\'>'
+          formattedHTML += Prism.highlight(`${markupLine}`, Prism.languages.markup)
+          formattedHTML += '</span>'
+        }
+      }
+
+      // cap off the stylized markup blocks
+      formattedHTML += '</code>\n</pre>'
+      formattedHTML = `<h2>Markup used:</h2>\n${formattedHTML}`
+
+      // use 500 status for the validation error
+      if (res) {
+        res.status(500)
+      }
+
+      // build a model that includes error data, markup, and styling
+      const model = {
+        prismStyle: prismStyleSheet.toString(),
+        preWidth: markupArray.length.toString().length * 8,
+        errors: errorList,
+        markup: formattedHTML,
+        rawMarkup: body
+      }
+
+      // parse error page template and replace response body with it
+      body = template(validatorErrorPage, model)
     }
 
-    render.apply(this, arguments)
+    return body
   }
 
-  // validate responses under the right conditions
-  app.use(tamper((req, res) => {
-    /**
-     * Skip validation when:
-     * - HTTP status is not 200 (don't validate error pages)
-     * - content-type is not text/html (don't validate non-HTML responses)
-     * - No exception applies
-     */
-    if (res.statusCode === 200 && res.getHeader('Content-Type') && res.getHeader('Content-Type').includes('text/html') && !validatorExceptions(req, res)) {
-      // start validating the response body
-      return body => {
-        // run the validator against the response body
-        const report = htmlValidate.validateString(body)
-
-        if (!report.valid) {
-          const errorMap = new Map()
-          let parsedErrors = ''
-
-          for (const error of report.results[0].messages) {
-            const message = escapeHtmlEntities(error.message)
-
-            // first line is error message
-            parsedErrors += `${message}\n`
-
-            // next line is line and column numbers
-            parsedErrors += `At line ${error.line}, column ${error.column}\n\n`
-
-            // add error message and line number to map
-            errorMap.set(error.line, error.message)
-          }
-
-          const errorList = `<h2>Errors:</h2>\n<code class="validatorErrors">${parsedErrors}</code>`
-
-          // start building out stylized markup block
-          let formattedHTML = '<pre class=\'markup\'>\n<code class="language-html">\n'
-          const markupArray = body.split('\n')
-
-          // add line number highlighting for detected errors
-          for (let i = 0; i < markupArray.length; i++) {
-            const markupLine = markupArray[i]
-            if (errorMap.has(i + 1)) {
-              formattedHTML += `<span title='${errorMap.get(i + 1)}' class='line-numbers error'>`
-              formattedHTML += Prism.highlight(`${markupLine}`, Prism.languages.markup)
-              formattedHTML += '</span>'
-            } else {
-              formattedHTML += '<span class=\'line-numbers\'>'
-              formattedHTML += Prism.highlight(`${markupLine}`, Prism.languages.markup)
-              formattedHTML += '</span>'
-            }
-          }
-
-          // cap off the stylized markup blocks
-          formattedHTML += '</code>\n</pre>'
-          formattedHTML = `<h2>Markup used:</h2>\n${formattedHTML}`
-
-          // use 500 status for the validation error
-          res.status(500)
-
-          // build a model that includes error data, markup, and styling
-          const model = {
-            prismStyle: prismStyleSheet.toString(),
-            preWidth: markupArray.length.toString().length * 8,
-            errors: errorList,
-            markup: formattedHTML,
-            rawMarkup: body
-          }
-
-          // parse error page template and replace response body with it
-          body = template(validatorErrorPage, model)
-        }
-
-        return body
+  if (app) {
+    // use some method overload trickery to store a usable model reference
+    app.response.render = function (view, model, callback) {
+      // store a reference to the model if exceptions are being used and a model was set
+      if (model && typeof model === 'object') {
+        resModel = model
       }
+
+      render.apply(this, arguments)
     }
-  }))
+
+    // validate responses under the right conditions
+    app.use(tamper((req, res) => {
+      /**
+       * Skip validation when:
+       * - HTTP status is not 200 (don't validate error pages)
+       * - content-type is not text/html (don't validate non-HTML responses)
+       * - No exception applies
+       */
+      if (res.statusCode === 200 && res.getHeader('Content-Type') && res.getHeader('Content-Type').includes('text/html') && !validatorExceptions(req, res)) {
+        return (body) => {
+          return validate(body, res)
+        }
+      }
+    }))
+  }
+
+  return validate // export validate function for general use
 }
 
 /*
