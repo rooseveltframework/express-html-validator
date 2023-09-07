@@ -54,7 +54,7 @@ router.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 })
 ```
-You can also run the validator on arbitrary strings outide of the Express context:
+You can also run the validator on arbitrary strings outide of the Express context (example in CommonJS):
 
 ```js
 const config = {}
