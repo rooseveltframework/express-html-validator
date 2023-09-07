@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 })
 ```
 
-For usage with ES6:
+Usage with ES modules:
 
 ```js
 import express from 'express';
