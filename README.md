@@ -11,7 +11,7 @@ First declare `express-html-validator` as a dependency in your app.
 
 Then require the package into your application and call its constructor, passing along your Express app:
 
-For usage with CommonJS:
+Usage with CommonJS:
 
 ```js
 const express = require('express')
