@@ -80,9 +80,9 @@ module.exports = (app, params) => {
   // instantiate the validator module
   const htmlValidate = new HtmlValidate(rules)
 
-  function validate (body, res) {
+  async function validate (body, res) {
     // run the validator against the response body
-    const report = htmlValidate.validateString(body)
+    const report = await htmlValidate.validateString(body)
 
     if (!report.valid) {
       const errorMap = new Map()
