@@ -4,6 +4,10 @@
 
 - Put your changes here...
 
+## 0.2.3
+
+- Updated various dependencies.
+
 ## 0.2.2
 
 - Bumped various dependencies.
