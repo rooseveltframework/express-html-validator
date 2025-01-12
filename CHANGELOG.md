@@ -4,6 +4,11 @@
 
 - Put your changes here...
 
+## 0.2.5
+
+- Fixed possible race condition.
+- Updated various dependencies.
+
 ## 0.2.4
 
 - Updated various dependencies.

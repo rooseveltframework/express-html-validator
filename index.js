@@ -166,8 +166,8 @@ module.exports = (app, params) => {
        * - No exception applies
        */
       if (res.statusCode === 200 && res.getHeader('Content-Type') && res.getHeader('Content-Type').includes('text/html') && !validatorExceptions(req, res)) {
-        return (body) => {
-          return validate(body, res)
+        return async (body) => {
+          return await validate(body, res)
         }
       }
     }))
