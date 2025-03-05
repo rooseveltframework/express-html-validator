@@ -44,10 +44,14 @@ module.exports = () => {
   // setup the express validator
   expressValidator(app, {
     exceptions: {
+      routes: ['/render-exception-route'],
       header: 'Partial',
       modelValue: '_disableValidator'
     }
   })
+
+  const app2 = express()
+  expressValidator(app2)
 
   // invalid html res.send
   app.get('/invalid', (req, res) => {
@@ -88,6 +92,11 @@ module.exports = () => {
     res.render('invalidTemplate', { hello: 'world' }, (e, html) => {
       res.send(html)
     })
+  })
+
+  // invalid html res.render with model exception route
+  app.get('/render-exception-route', (req, res) => {
+    res.render('invalidTemplate', {})
   })
 
   // invalid html res.render with model exception value

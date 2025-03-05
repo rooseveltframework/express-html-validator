@@ -15,9 +15,21 @@ test.after(t => {
   t.context.server.close()
 })
 
-/**
- * Invalid HTML
- */
+test('standalone validator', async t => {
+  const standaloneValidator = require('..')({})
+  const text = await standaloneValidator(`
+    <!DOCTYPE html>
+    <html lang='en'>
+      <head>
+        <meta charset='utf-8'>
+      </head>
+      <body
+        <h1>hello</h1>
+      </body>
+    </html>`)
+  t.true(text.includes('HTML did not pass validator'))
+})
+
 test('invalid HTML on res.send', async t => {
   const res = await request(t.context.app)
     .get('/invalid')
@@ -66,10 +78,6 @@ test('invalid HTML on res.render with model and callback', async t => {
   t.true(res.text.includes('HTML did not pass validator'))
 })
 
-/**
- * Valid HTML
- */
-
 test('valid HTML on res.send', async t => {
   const res = await request(t.context.app)
     .get('/valid')
@@ -94,9 +102,14 @@ test('valid HTML on res.render', async t => {
   t.false(res.text.includes('HTML did not pass validator'))
 })
 
-/**
- * Exceptions
- */
+test('skip validation when hitting the exception route', async t => {
+  const res = await request(t.context.app)
+    .get('/render-exception-route')
+
+  t.is(res.status, 200)
+  t.false(res.text.includes('HTML did not pass validator'))
+})
+
 test('skip validation when res.render model includes exception', async t => {
   const res = await request(t.context.app)
     .get('/render-exception-model')
@@ -138,9 +151,6 @@ test('skip validation on res.json', async t => {
   t.false(res.text.includes('HTML did not pass validator'))
 })
 
-/**
- * Configuration
- */
 test('use config file when validatorConfig is undefined', t => {
   let config
   const htmlValidateStub = {

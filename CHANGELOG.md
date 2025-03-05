@@ -4,6 +4,12 @@
 
 - Put your changes here...
 
+## 1.0.0
+
+- Added a new type of `exceptions` param called `routes`.
+- Refactored the code.
+- Updated various dependencies.
+
 ## 0.2.5
 
 - Fixed possible race condition.
