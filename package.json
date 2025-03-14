@@ -8,7 +8,7 @@
       "url": "https://github.com/rooseveltframework/express-html-validator/graphs/contributors"
     }
   ],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "files": [
     "templates",
     "express-html-validator.js"
@@ -22,9 +22,9 @@
   },
   "dependencies": {
     "app-root-dir": "1.0.2",
-    "html-validate": "9.5.0",
+    "html-validate": "9.5.1",
     "minimatch": "10.0.1",
-    "prismjs": "1.29.0",
+    "prismjs": "1.30.0",
     "tamper": "1.1.0"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "proxyquire": "2.1.3",
     "standard": "17.1.2",
     "supertest": "7.0.0",
-    "teddy": "0.6.26"
+    "teddy": "1.0.1"
   },
   "repository": {
     "type": "git",

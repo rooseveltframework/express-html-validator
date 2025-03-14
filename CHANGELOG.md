@@ -7,6 +7,7 @@
 ## 1.0.1
 
 - Fixed a possible crash that can happen with some variety of request objects.
+- Updated various dependencies.
 
 ## 1.0.0
 
