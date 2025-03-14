@@ -46,7 +46,7 @@ module.exports = (app, params) => {
 
   function reqExemptFromValidation (req, res) {
     // check for route exemptions
-    if (wildcardMatch(req.route.path, routeException)) return true
+    if (wildcardMatch(req.route?.path, routeException)) return true
 
     // check for model exemptions
     if (resModel) {
