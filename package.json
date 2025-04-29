@@ -11,7 +11,8 @@
   "version": "1.0.1",
   "files": [
     "templates",
-    "express-html-validator.js"
+    "express-html-validator.js",
+    "*.md"
   ],
   "homepage": "https://github.com/rooseveltframework/express-html-validator",
   "license": "CC-BY-4.0",
