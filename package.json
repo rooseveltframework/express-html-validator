@@ -14,7 +14,7 @@
     "express-html-validator.js",
     "*.md"
   ],
-  "homepage": "https://github.com/rooseveltframework/express-html-validator",
+  "homepage": "https://rooseveltframework.org/docs/express-html-validator/latest",
   "license": "CC-BY-4.0",
   "main": "express-html-validator.js",
   "readmeFilename": "README.md",
