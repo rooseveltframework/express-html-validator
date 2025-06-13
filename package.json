@@ -19,7 +19,7 @@
   "main": "express-html-validator.js",
   "readmeFilename": "README.md",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "app-root-dir": "1.0.2",
