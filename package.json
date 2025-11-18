@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "app-root-dir": "1.0.2",
-    "html-validate": "10.3.0",
+    "html-validate": "10.4.0",
     "minimatch": "10.0.1",
     "prismjs": "1.30.0",
     "tamper": "1.1.0"
