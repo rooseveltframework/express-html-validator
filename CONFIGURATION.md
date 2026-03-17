@@ -14,3 +14,13 @@ Default for `validatorConfig`:
   "extends": ["html-validate:standard"]
 }
 ```
+
+You may also want to override the version of [html-validate](https://www.npmjs.com/package/html-validate) this module ships with by default, since that module has had a history of updating faster than this one does at times. To do so, set this in your app's `package.json`:
+
+```json
+"overrides": {
+  "html-validate": "x.y.z"
+}
+```
+
+Where `x.y.z` is your desired version. After doing so, delete your `node_modules` folder and `package-lock.json` then run `npm i` to install the override.
