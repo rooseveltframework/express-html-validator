@@ -1,7 +1,7 @@
 const path = require('path')
 const proxyquire = require('proxyquire')
 const request = require('supertest')
-const test = require('ava')
+const { default: test } = require('ava')
 const expressSetup = require('./lib/_expressSetup')
 
 test.before(t => {
