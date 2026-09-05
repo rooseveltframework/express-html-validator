@@ -7,9 +7,8 @@ const path = require('path')
 const teddy = require('teddy')
 const expressValidator = require('../..')
 
-module.exports = () => {
-  // invalid html to test against
-  const invalidHTML = `
+// invalid html to test against: the body tag is never terminated
+const invalidHTML = `
     <!DOCTYPE html>
     <html lang='en'>
       <head>
@@ -20,8 +19,8 @@ module.exports = () => {
       </body>
     </html>`
 
-  // valid html to test against
-  const validHTML = `
+// valid html to test against
+const validHTML = `
     <!DOCTYPE html>
     <html lang='en'>
       <head>
@@ -33,6 +32,7 @@ module.exports = () => {
       </body>
     </html>`
 
+function expressSetup () {
   // init express app
   const app = express()
 
@@ -50,8 +50,8 @@ module.exports = () => {
     }
   })
 
-  const app2 = express()
-  expressValidator(app2)
+  // exercise the code path where the validator is set up without any params
+  expressValidator(express())
 
   // invalid html res.send
   app.get('/invalid', (req, res) => {
@@ -131,5 +131,54 @@ module.exports = () => {
     res.json({ hello: 'world' })
   })
 
+  // valid html written to the response in several chunks rather than all at once
+  app.get('/chunked', (req, res) => {
+    res.type('html')
+    for (const chunk of validHTML.match(/[\s\S]{1,20}/g)) res.write(chunk)
+    res.end()
+  })
+
+  // invalid html sent with a status other than 200, which the validator ignores
+  app.get('/not-found', (req, res) => {
+    res.status(404).send(invalidHTML)
+  })
+
+  // valid html sent through the raw node.js response api with a headers object and write and end callbacks
+  app.get('/raw', (req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/html' })
+    res.write(validHTML.slice(0, 20), () => {})
+    res.end(validHTML.slice(20), () => {})
+  })
+
+  // valid html sent through the raw node.js response api, ending the response with nothing but a callback
+  app.get('/raw-end-callback', (req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/html' })
+    res.write(validHTML)
+    res.end(() => {})
+  })
+
+  // invalid html sent from middleware rather than a route, meaning req.route will be undefined
+  app.use('/middleware', (req, res) => {
+    res.send(invalidHTML)
+  })
+
   return app
 }
+
+// an app configured with a validator that will fail when it runs
+function brokenValidatorSetup () {
+  const app = express()
+
+  expressValidator(app, { validatorConfig: { extends: ['html-validate:does-not-exist'] } })
+
+  app.get('/valid', (req, res) => {
+    res.send(validHTML)
+  })
+
+  return app
+}
+
+module.exports = expressSetup
+module.exports.brokenValidatorSetup = brokenValidatorSetup
+module.exports.invalidHTML = invalidHTML
+module.exports.validHTML = validHTML

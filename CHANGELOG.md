@@ -1,3 +1,11 @@
+## 1.1.0
+
+- Breaking: Increased Node.js requirement to 22.5.0 or higher.
+- Fixed a crash that could occur when a response is sent from middleware rather than a route while the `exceptions.routes` param is in use.
+- Fixed an issue where validator error messages containing quotes could break the markup of the error page.
+- Fixed a race condition where concurrent `res.render` calls could apply the wrong data model when evaluating the `exceptions.modelValue` param.
+- Updated dependencies.
+
 ## 1.0.1
 
 - Fixed a possible crash that can happen with some variety of request objects.
