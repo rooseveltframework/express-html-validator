@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "attr-quotes": ["error", { "style": "double" }]
+  }
+}
