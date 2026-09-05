@@ -6,7 +6,8 @@ const expressValidator = require('..')
 const expressSetup = require('./lib/_expressSetup')
 const { brokenValidatorSetup, invalidHTML, validHTML } = expressSetup
 
-const port = 43711
+// below 32768, which is where operating systems start handing out ports for outbound connections: linux uses 32768-60999 and macos and windows use 49152-65535, so a port inside those ranges can be taken by something else on the machine and leave the suite failing on a port nothing appears to be listening on
+const port = 30711
 const origin = `http://localhost:${port}`
 const fixtures = path.join(__dirname, 'fixtures')
 const validationFailed = 'HTML did not pass validator'

@@ -1,3 +1,8 @@
+## 1.1.1
+
+- Improved error handling.
+- Updated dependencies.
+
 ## 1.1.0
 
 - Breaking: Increased Node.js requirement to 22.5.0 or higher.
