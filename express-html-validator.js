@@ -116,7 +116,8 @@ function captureResponseBody (accept) {
         this.writeHead(this.statusCode, statusMessage)
         this.end(finalBody, callback)
       }
-      Promise.resolve(rewrite(body)).then(send, error => { // send the body untouched rather than hanging the response if the rewrite fails
+      // the rewrite is called inside the chain rather than handed to Promise.resolve, so that a rewrite which throws outright is caught here alongside one that rejects; calling it first would let a throw escape res.end, taking the process down with the response never sent
+      Promise.resolve().then(() => rewrite(body)).then(send, error => { // send the body untouched rather than losing the response if the rewrite fails
         process.emitWarning(error)
         send(body)
       })
