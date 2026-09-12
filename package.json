@@ -22,7 +22,7 @@
     "node": ">=22.5.0"
   },
   "dependencies": {
-    "html-validate": "11.14.0",
+    "html-validate": "11.15.0",
     "prismjs": "1.30.0"
   },
   "devDependencies": {
