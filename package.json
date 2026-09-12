@@ -28,7 +28,7 @@
   "devDependencies": {
     "express": "5.2.1",
     "standard": "17.1.2",
-    "teddy": "2.0.1"
+    "teddy": "2.0.2"
   },
   "repository": {
     "type": "git",
